@@ -1,13 +1,18 @@
 <div class="notice">
-  <% challenge = @work.collections.unrevealed.first.challenge %>
-  <% if @work.collections.unrevealed.count == 1 && challenge&.works_reveal_at? %>
+  <% if @work.user_is_owner_or_invited?(current_user) %>
+    <% collections = @work.collections %>
+  <% else %>
+    <% collections = @work.approved_collections %>
+  <% end %>
+  <% challenge = collections.unrevealed.first.challenge %>
+  <% if collections.unrevealed.count == 1 && challenge&.works_reveal_at? %>
     <p>
       <%= t(".scheduled_reveal_html", date: date_in_zone(challenge.works_reveal_at)) %>
   <% else %>
     <p>
       <%= t(".not_revealed") %>
   <% end %>
-      <%= t(".details_html", collection: show_collections_data(@work.collections.unrevealed)) %>
+      <%= t(".details_html", collection: show_collections_data(collections.unrevealed)) %>
     </p>
     <p>
       <%= t(".learn_more_html", 
